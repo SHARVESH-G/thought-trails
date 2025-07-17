@@ -246,7 +246,7 @@ export const dashboard_data = {
 export const footer_data = [
       {
           title: "Quick Links",
-          links: ["Home", "Best Sellers", "Offers & Deals", "Contact Us", "FAQs"]
+          links: ["Home", "Top Blogs", "Newest", "Contact Us", "FAQs"]
       },
       {
           title: "Need Help?",
@@ -254,6 +254,6 @@ export const footer_data = [
       },
       {
           title: "Follow Us",
-          links: ["Instagram", "Twitter", "Facebook", "YouTube"]
+          links: ["Instagram", "Twitter", "Facebook", "LinkedIn"]
       }
   ];

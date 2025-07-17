@@ -4,13 +4,14 @@ import CtmShip from "../../components/chip/chip";
 import BlogList from "../../components/blogList/blogList";
 import BlogCard from "../../components/blogCard/blogCard";
 import { blog_data } from "../../assets/icons/assets";
+import Footer from "../../components/footer/footer";
+import SecondFooter from "../../components/footer/secondFooter";
 
 const Home = () => {
   const [menu, setMenu] = useState("All");
 
   return (
     <div>
-      <Navbar />
       <CtmShip text="New : AI Integrated" />
 
       <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center text-black/65 font-semibold">
