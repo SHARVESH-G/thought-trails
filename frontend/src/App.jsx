@@ -8,8 +8,12 @@ import Dashboard from './pages/dsahboard/dashboard'
 import AddBlog from './pages/addBlog/addBlog'
 import BlogLists from './pages/blogLists/blogLists'
 import Comments from './pages/comments/comments'
+import Login from './pages/login/login'
 
 const App = () => {
+
+  let a = !false;
+
   return (
     <Routes>
       <Route element={<Layout/>}>
@@ -17,7 +21,7 @@ const App = () => {
         <Route path='/blog/:id' element={<Blog/>}/>
       </Route>
 
-      <Route path="/admin" element={<AdminLayout/>}>
+      <Route path="/admin" element={a ? <AdminLayout/> : <Login/>}>
         <Route index element={<Dashboard/>} />
         <Route path='addblog' element={<AddBlog/>} />
         <Route path='listblog' element={<BlogLists/>} />
