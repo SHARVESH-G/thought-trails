@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import CtmShip from "../../components/chip/chip";
 import BlogList from "../../components/blogList/blogList";
 import BlogCard from "../../components/blogCard/blogCard";
-import { blog_data } from "../../assets/icons/assets";
-import Footer from "../../components/footer/footer";
-import SecondFooter from "../../components/footer/secondFooter";
+import { useAppContext } from "../../context/AppContext";
 
 const Home = () => {
   const [menu, setMenu] = useState("All");
+  const { blogs, input , setInput } = useAppContext();
+
+  const filteredBlogs = blogs.filter((blog) => {
+    const matchesSearch =
+      input === "" ||
+      blog.title.toLowerCase().includes(input.toLowerCase()) ||
+      blog.category.toLowerCase().includes(input.toLowerCase());
+
+    const matchesMenu = menu === "All" || blog.category === menu;
+
+    return matchesSearch && matchesMenu;
+  });
 
   return (
     <div>
@@ -31,27 +41,22 @@ const Home = () => {
       >
         <input
           type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Search for blogs"
-          required
           className="w-full pl-4 py-4 outline-none text-sm"
         />
-        <button
-          type="submit"
-          className="bg-primary text-white px-6 py-2 ml-2 rounded 
-                     hover:scale-105 transition-transform cursor-pointer"
-        >
-          Search
-        </button>
       </form>
 
       <BlogList menu={menu} setMenu={setMenu} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mb-24 mx-8 sm:mx-16 xl:mx-40">
-        {blog_data
-          .filter((blog) => menu === "All" || blog.category === menu)
-          .map((blog) => (
-            <BlogCard key={blog._id} blog={blog} />
-          ))}
+        {filteredBlogs.map((blog) => (
+          <BlogCard key={blog._id} blog={blog} />
+        ))}
+      </div>
+      <div className="flex  justify-center">
+        {input && <button onClick={()=>setInput("")} className="text-primary bg-primary/20 px-4 py-2 rounded border-1 border-primary text-xs cursor-pointer" >Clear Search</button>}
       </div>
     </div>
   );

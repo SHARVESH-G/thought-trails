@@ -3,21 +3,37 @@ import { assets, blog_data, comments_data } from "../../assets/icons/assets";
 import { useParams } from "react-router-dom";
 import Moment from "moment";
 import Loader from "../../components/loder/loader";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 const Blog = () => {
   const { id } = useParams();
+  const {axios} = useAppContext()
   const [blog, setBlog] = useState(null);
   const [comments, setComments] = useState([]);
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
 
   const fetchedBlogData = async () => {
-    const data = await blog_data.find((item) => item._id === id);
-    setBlog(data);
+    try{
+      const {data} = await axios.get(`/api/blog/${id}`)
+      data.success ? setBlog(data.blog) : toast.error(data.message)
+    }catch(error){
+      toast.error(error.message)
+    }
   };
 
   const fetchComments = async () => {
-    setComments(comments_data);
+    try{
+      const {data} = await axios.post('/api/blog/comments' , {blogId:id}) 
+      if(data.success){
+        setComments(data.comments)
+      }else{
+        toast.error(data.message)
+      }
+    }catch(error){
+      toast.error(error.message)
+    }
   };
 
   useEffect(() => {
@@ -25,19 +41,22 @@ const Blog = () => {
     fetchComments();
   }, []);
 
-  const addComment = (e) => {
+  const addComment = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !comment.trim()) return;
-
-    const newComment = {
-      name,
-      content: comment,
-      createdAt: new Date().toISOString(),
-    };
-
-    setComments((prev) => [newComment, ...prev]);
-    setName("");
-    setComment("");
+    try{
+      const {data} = await axios.post('/api/blog/add-comment' , {blog:id , name , content:comment})
+      if(data.success){
+        toast.success(data.message)
+        setName("");
+        setComment("");
+        fetchComments();
+      }
+      else{
+        toast.error(data.message)
+      }
+    }catch(error){
+      toast.error(error.message)
+    }
   };
 
   return blog ? (
@@ -58,7 +77,7 @@ const Blog = () => {
         ></h2>
 
         <p className="inline-block py-1 px-4 rounded-full mb-6 border text-sm border-primary/35 bg-primary/5 font-medium text-primary">
-          Michael Brown
+          Sharvesh G
         </p>
       </div>
 
@@ -123,7 +142,7 @@ const Blog = () => {
             ></textarea>
             <button
               type="submit"
-              className="bg-primary text-white rounded p-2 px-8 hover:scale-105 transition-transform cursor-pointer"
+              className="bg-primary text-white rounded p-2 px-8 cursor-pointer"
             >
               Submit
             </button>

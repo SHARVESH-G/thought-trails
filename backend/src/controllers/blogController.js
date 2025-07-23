@@ -1,9 +1,10 @@
+import geminiMain from "../config/gemini.js";
 import BLOG from "../models/Blog.js";
 import COMMENT from "../models/Comments.js";
 
 export const addBlog = async (req, res) => {
   try {
-    const { title, subTitle, description, category, image, isPublished } = req.body;
+    const { title, subTitle, description, category, image, isPublished } = req.body.blog;
 
     if (!title || !description || !category || isPublished === undefined) {
       return res.status(400).json({ message: 'All required fields must be provided' });
@@ -88,7 +89,7 @@ export const addComments = async(req,res) =>{
     try{
         const {blog , name , content} = req.body;
         await COMMENT.create({blog , name , content});
-        res.json({success:true , message:error.message})
+        res.json({success:true , message:"Comment Added"})
     }catch(error){
         return res.json({success:false , message:error.message})
     }
@@ -104,5 +105,19 @@ export const getBlogComments = async(req,res) =>{
         return res.json({success:true, comments});
     }catch(error){
         return res.json({success:false , message:error.message})
+    }
+}
+
+
+
+
+
+export const generateContent = async(req,res)=>{
+    try{
+        const {prompt} = req.body
+        const content = await geminiMain(prompt + ' generate a blog content for this topic in a simple text formate')
+        return res.json({success:true , content})
+    }catch(error){
+        return res.json({success:false , message:"Internal Server Error"})
     }
 }
