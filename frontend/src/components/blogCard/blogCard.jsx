@@ -12,7 +12,7 @@ const BlogCard = ({ blog }) => {
       onClick={() => navigate(`/blog/${_id}`)}
       className="w-full rounded-lg overflow-hidden shadow hover:scale-102 hover:shadow-primary/25 duration-300 cursor-pointer"
     >
-      <img src={image} alt={title} className="aspect-video w-full object-cover" />
+      <img src={image || import.meta.env.VITE_DEFAULT_IMAGE_URL} alt={title} className="aspect-video w-full object-cover" />
 
       <TopicChip category={category}/>
 

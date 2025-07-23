@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { assets, blogCategories } from '../../assets/icons/assets';
-import { useAppContext } from '../../context/AppContext';
-import Quill from 'quill';
-import toast from 'react-hot-toast';
-import { marked } from 'marked';
+import React, { useEffect, useRef, useState } from "react";
+import { assets, blogCategories } from "../../assets/icons/assets";
+import { useAppContext } from "../../context/AppContext";
+import Quill from "quill";
+import toast from "react-hot-toast";
+import { marked } from "marked";
 
 const AddBlog = () => {
   const { axios } = useAppContext();
 
-  const [title, setTitle] = useState('');
-  const [subTitle, setSubTitle] = useState('');
-  const [category, setCategory] = useState('Startup');
+  const [title, setTitle] = useState("");
+  const [subTitle, setSubTitle] = useState("");
+  const [category, setCategory] = useState("Startup");
   const [isPublished, setIsPublished] = useState(false);
   const [image, setImage] = useState(null);
-  const [imageBase64, setImageBase64] = useState('');
+  const [imageBase64, setImageBase64] = useState("");
   const [loading, setLoading] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -24,7 +24,7 @@ const AddBlog = () => {
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
       quillRef.current = new Quill(editorRef.current, {
-        theme: 'snow',
+        theme: "snow",
       });
     }
   }, []);
@@ -34,7 +34,7 @@ const AddBlog = () => {
     const file = e.target.files[0];
 
     if (file && file.size > 10 * 1024 * 1024) {
-      toast.error('Image size must be less than 10MB');
+      toast.error("Image size must be less than 10MB");
       return;
     }
 
@@ -49,17 +49,19 @@ const AddBlog = () => {
 
   // Generate blog content using AI
   const generateContent = async () => {
-    if (!title) return toast.error('Please enter the Title');
+    if (!title) return toast.error("Please enter the Title");
     try {
       setLoading(true);
-      const { data } = await axios.post('/api/blog/generate', { prompt: title });
+      const { data } = await axios.post("/api/blog/generate", {
+        prompt: title,
+      });
       if (data.success) {
         quillRef.current.root.innerHTML = marked.parse(data.content);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to generate content');
+      toast.error(error.message || "Failed to generate content");
     } finally {
       setLoading(false);
     }
@@ -80,18 +82,18 @@ const AddBlog = () => {
         image: imageBase64 || null,
       };
 
-      const { data } = await axios.post('/api/blog/add', { blog });
+      const { data } = await axios.post("/api/blog/add", { blog });
 
       if (data.success) {
         toast.success(data.message);
         // Reset all fields
-        setTitle('');
-        setSubTitle('');
+        setTitle("");
+        setSubTitle("");
         setImage(null);
-        setImageBase64('');
-        setCategory('Startup');
+        setImageBase64("");
+        setCategory("Startup");
         setIsPublished(false);
-        quillRef.current.root.innerHTML = '';
+        quillRef.current.root.innerHTML = "";
       } else {
         toast.error(data.message);
       }
@@ -149,15 +151,25 @@ const AddBlog = () => {
 
         {/* Blog Content */}
         <p className="mt-4">Blog Description</p>
-        <div className="max-w-lg pb-16 sm:pb-10 pt-2 relative">
-          <div ref={editorRef} className='min-h-[200px]'></div>
+        <div className="max-w-lg h-74 pb-16 sm:pb-10 pt-2 relative">
+          <div
+            ref={editorRef}
+            className="min-h-[200px] relative border border-gray-300 rounded"
+          >
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
+                <p className="text-gray-500 text-sm">Generating...</p>
+              </div>
+            )}
+          </div>
+
           <button
             type="button"
             disabled={loading}
             onClick={generateContent}
             className="absolute bottom-1 right-2 ml-2 text-xs text-white bg-black/70 px-4 py-1.5 rounded hover:underline cursor-pointer"
           >
-            {loading ? 'Generating...' : 'Generate With AI'}
+            {loading ? "Generating..." : "Generate With AI"}
           </button>
         </div>
 
@@ -193,7 +205,7 @@ const AddBlog = () => {
           disabled={isAdding}
           className="mt-8 w-40 h-10 bg-primary text-white rounded cursor-pointer text-sm"
         >
-          {isAdding ? 'Adding…' : 'Add Blog'}
+          {isAdding ? "Adding…" : "Add Blog"}
         </button>
       </div>
     </form>

@@ -19,7 +19,7 @@ const BlogSchema = new mongoose.Schema(
         },
         image:{
             type:String,
-            default:process.env.IMAGE
+            default:"https://www.atulhost.com/wp-content/uploads/2017/10/blog.jpg"
         },
         isPublished:{
             type:Boolean,
